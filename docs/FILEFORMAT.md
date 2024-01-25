@@ -9,7 +9,7 @@ We store our .dat file as follows:
 
 * The next byte in the file is the length of the following string
   * e.g. 'potato' > 0b00000110
-  * This has a hard limit of item names = 256c
+  * This has a hard limit of item names = 255c (256 minus null byte from c-string)
 
 * The next four bytes are the integer for how many of the item we have
   * Again this gives us a hard limit of 2\*\*32 items but

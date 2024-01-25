@@ -7,6 +7,8 @@ CXXFLAGS ?=
 main: build $(OBJS)
 	$(CXX) $(CXXFLAGS) -o main $(OBJS)
 
+test: grocer.txt
+
 grocer.txt:
 	python3 tests/gentest.py -l 1024
 
@@ -22,7 +24,7 @@ build/%.o: src/%.cpp
 
 .PHONY: clean
 clean:
-	rm -rf build main
+	rm -rf build main frequency.dat grocer.txt
 
 .PHONY: remake
 remake: clean main
