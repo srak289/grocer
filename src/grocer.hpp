@@ -16,14 +16,14 @@ namespace grocer {
     class DataFile {
         std::ifstream m_iStream;
         std::ofstream m_oStream;
-        std::map<std::string, int> m_itemMap;
-        static void itoc(char*, int&);
-        static void ctoi(char*, int&);
+        std::map<std::string, unsigned int> m_itemMap;
+        static void itoc(char*, unsigned int&);
+        static void ctoi(char*, unsigned int&);
         void Write();
         void Read();
         bool FindItem(std::string&);
     public:
-        int GetItem(std::string&);
+        unsigned int GetItem(std::string&);
         void AddItem(std::string&);
         DataFile();
     };
@@ -33,6 +33,7 @@ namespace grocer {
         void ClearScreen();
     public:
         void Run();
+        App();
     };
 
     class Menu {
