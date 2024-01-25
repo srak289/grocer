@@ -23,5 +23,6 @@ void App::ClearScreen() {
  */
 void App::Run() {
     this->ClearScreen();
+    this->m_dataFile = DataFile();
     std::cout << "App running\n";
 }

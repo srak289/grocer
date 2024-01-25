@@ -13,12 +13,6 @@
 #include <string>
 
 namespace grocer {
-    class App {
-        void ClearScreen();
-    public:
-        void Run();
-    };
-
     class DataFile {
         std::ifstream m_iStream;
         std::ofstream m_oStream;
@@ -32,6 +26,13 @@ namespace grocer {
         int GetItem(std::string&);
         void AddItem(std::string&);
         DataFile();
+    };
+
+    class App {
+        DataFile m_dataFile;
+        void ClearScreen();
+    public:
+        void Run();
     };
 
     class Menu {

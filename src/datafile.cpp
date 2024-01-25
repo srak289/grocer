@@ -6,6 +6,7 @@
 // 20240124
 
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <string>
 #include "grocer.hpp"
@@ -15,6 +16,123 @@ using namespace grocer;
 
 DataFile::DataFile() {
     this->m_itemMap = std::map<std::string, int>();
+    std::string s = "potato";
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    s = "zuccini";
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    s = "corn";
+    this->AddItem(s);
+    this->AddItem(s);
+    s = "pumpkin";
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    s = "carrot";
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    s = "celery";
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    s = "yam";
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    this->AddItem(s);
+    s = "tomato";
+    this->AddItem(s);
+    this->AddItem(s);
+    this->Write();
 }
 
 void DataFile::itoc(char* buf, int& i) {
@@ -54,8 +172,19 @@ void DataFile::Write() {
 
     this->m_oStream.write(buf, 4);
 
-    for (int i=0; i<fsz; i++) {
+    for (auto it = this->m_itemMap.begin(); it != this->m_itemMap.end(); ++it) {
+        std::cout << "Writing key " << it->first << " with value " << it->second << "\n";
 
+        int w = static_cast<int>(it->first.size()+1);
+
+        std::cout << "WRiting int " << w << " to file\n";
+        DataFile::itoc(buf, w);
+        this->m_oStream.write(buf, 1);
+
+        this->m_oStream.write(it->first.c_str(), it->first.size()+1);
+
+        DataFile::itoc(buf, it->second);
+        this->m_oStream.write(buf, 4);
     }
 
     this->m_oStream.close();
