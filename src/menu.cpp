@@ -8,18 +8,19 @@
 #include <iostream>
 #include "grocer.hpp"
 
+using namespace grocer;
 
-Menu::DisplayHeader() {
+
+void Menu::DisplayHeader() {
     std::cout << "Header\n";
 }
 
-int Menu::GetInput(const char* t_prompt, int& t_intRef) {
-    cin.exceptions(ios::failbit);
+int Menu::GetInput(int& t_intRef) {
+    std::cin.exceptions(std::ios::failbit);
     while (true) {
-        std::cout << t_prompt;
         try {
             std::cin >> t_intRef;
-        } catch (ios::failure& e) {
+        } catch (std::ios::failure& e) {
             std::cin.clear();
             std::cin.ignore(256, '\n');
             std::cout << "Failed to parse input.\nPlease enter an integer 1-4.\n\n";
@@ -31,11 +32,11 @@ int Menu::GetInput(const char* t_prompt, int& t_intRef) {
 
 }
 
-Menu::Run() {
+void Menu::Run() {
     this->DisplayHeader();
     int x = 0;
     while (x != 4) {
-        this->GetInput(&x);
+        this->GetInput(x);
         switch (x) {
             case 1:
                 break;

@@ -14,14 +14,14 @@ using namespace grocer;
 /**
  * Clear the screen
  */
-App::ClearScreen() {
-    std::cout << u8"\033[2J\033[1;1H";
+void App::ClearScreen() {
+    std::cout << "\033[2J\033[1;1H";
 }
 
 /**
  * The main entrypoint for App
  */
-App::Run() {
+void App::Run() {
     this->ClearScreen();
     std::cout << "App running\n";
 }

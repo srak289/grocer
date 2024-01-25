@@ -20,22 +20,27 @@ namespace grocer {
     };
 
     class DataFile {
-        fstream::istream m_iStream;
-        fstream::ostream m_oStream;
+        std::ifstream m_iStream;
+        std::ofstream m_oStream;
         std::map<std::string, int> m_itemMap;
+        static void itoc(char*, int&);
+        static void ctoi(char*, int&);
         void Write();
         void Read();
-        bool FindItem(std::string& t_itemName);
+        bool FindItem(std::string&);
     public:
-        int GetItem(std::string& t_itemName);
-        void AddItem(std::string& t_itemName);
+        int GetItem(std::string&);
+        void AddItem(std::string&);
+        DataFile();
     };
 
     class Menu {
+        void DisplayHeader();
     public:
-        void GetInput();
+        int GetInput(int&);
         void Quit();
         void ShowQuantities(bool);
+        void Run();
     };
 }
 
