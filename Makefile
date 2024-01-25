@@ -7,6 +7,9 @@ CXXFLAGS ?=
 main: build $(OBJS)
 	$(CXX) $(CXXFLAGS) -o main $(OBJS)
 
+grocer.txt:
+	python3 tests/gentest.py -l 1024
+
 debug: clean
 	CXXFLAGS=-g $(MAKE)
 	gdb ./main
