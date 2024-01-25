@@ -141,7 +141,7 @@ DataFile::DataFile() {
     this->Write();
 }
 
-void DataFile::itoc(char* buf, int& i) {
+void DataFile::itoc(char* buf, unsigned int& i) {
     buf[0] = i & 0xff000000;
     buf[1] = i & 0x00ff0000;
     buf[2] = i & 0x0000ff00;
@@ -156,7 +156,7 @@ void DataFile::Read() {
     this->m_iStream = std::ifstream("frequency.dat", std::ios::binary);
 
     char buf[256] = {0};
-    int fsz = 0;
+    unsigned int fsz = 0;
 
     this->m_iStream.read(buf, 4);
     DataFile::ctoi(buf, fsz);
@@ -189,7 +189,7 @@ void DataFile::Write() {
 
     char buf[256] = {0};
 
-    int fsz = this->m_itemMap.size();
+    unsigned int fsz = this->m_itemMap.size();
     DataFile::itoc(buf, fsz);
 
     this->m_oStream.write(buf, 4);
@@ -197,7 +197,7 @@ void DataFile::Write() {
     for (auto it = this->m_itemMap.begin(); it != this->m_itemMap.end(); ++it) {
         std::cout << "Writing key " << it->first << " with value " << it->second << "\n";
 
-        int w = static_cast<int>(it->first.size()+1);
+        unsigned int w = static_cast<int>(it->first.size()+1);
 
         std::cout << "Writing int " << w << " to file\n";
         DataFile::itoc(buf, w);
