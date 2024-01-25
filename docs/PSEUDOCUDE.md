@@ -9,7 +9,7 @@ main
 app
 * init data object
 * init menu object
-* execute menu function one if called explicitely
+* execute menu function one if called explicitly
 * show menu if called
 * sava data
 
@@ -24,14 +24,9 @@ menu
   * exit
 
 data
+* store data in std::map<string, unsigned int> during operation
 * load data from `frequency.dat` (if there is any)
   * frequency.dat should be stored as packed binary data
     we should figure out if classes can be packed like this
     or if we use structs (allegedly they are the same in C++)
 * save data
-* handle linked list construction/destruction
-
-ll format:
-| name | amt | nextItemPtr |
-| Onion | 3 | <ptr to potato> |
-| Potato | 4 | <nullptr> |
