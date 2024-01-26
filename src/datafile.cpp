@@ -142,14 +142,17 @@ DataFile::DataFile() {
 }
 
 void DataFile::itoc(char* buf, unsigned int& i) {
-    buf[0] = i & 0xff000000;
-    buf[1] = i & 0x00ff0000;
-    buf[2] = i & 0x0000ff00;
-    buf[3] = i & 0x000000ff;
+    buf[0] = (i & 0xff000000) >> 24;
+    buf[1] = (i & 0x00ff0000) >> 16;
+    buf[2] = (i & 0x0000ff00) >> 8;
+    buf[3] = (i & 0x000000ff);
 }
 
 void DataFile::ctoi(char* buf, unsigned int& i) {
-    i = buf[0] | buf[1] | buf[2] | buf[3];
+    i = reinterpret_cast<unsigned char&>(buf[0]) << 24
+        | reinterpret_cast<unsigned char&>(buf[1]) << 16
+        | reinterpret_cast<unsigned char&>(buf[2]) << 8
+        | reinterpret_cast<unsigned char&>(buf[3]);
 }
 
 void DataFile::Read() {
@@ -158,26 +161,45 @@ void DataFile::Read() {
     char buf[256] = {0};
     unsigned int fsz = 0;
 
+    // read the first 4-byte int from the file to tell us
+    // how many item there are
     this->m_iStream.read(buf, 4);
     DataFile::ctoi(buf, fsz);
 
     std::cout << "Reading " << fsz << " from file\n";
 
     for (int i=0; i<fsz; i++) {
+        // zero the important part of the buffer each
+        // loop or our single byte read will be incorrect
+        // from DataFile::ctoi
         buf[0] = 0;
         buf[1] = 0;
         buf[2] = 0;
         buf[3] = 0;
+
+        // read the first byte to get our string length
         this->m_iStream.read(buf, 1);
+        // Copy MSB to LSB for ctoi to give us the right int back
+        // zero the MSB
         buf[3] = buf[0];
+        buf[0] = 0;
+
+        // get the string length to read including \0
         unsigned int len = 0;
         DataFile::ctoi(buf, len);
+
         std::cout << "Reading " << len << " from file.\n";
         this->m_iStream.read(buf, len);
+
+        // make a new string from buf up to \0
         std::string s(buf);
+
+        // read the int for how many items there are
         this->m_iStream.read(buf, 4);
         DataFile::ctoi(buf, len);
+
         std::cout << "Adding " << s << " with quantity " << len << " to map\n";
+        // add the reconstructed key to the map
         this->m_itemMap[s] = len;
     }
 
@@ -188,7 +210,6 @@ void DataFile::Write() {
     this->m_oStream = std::ofstream("frequency.dat", std::ios::binary | std::ios::trunc);
 
     char buf[256] = {0};
-
     unsigned int fsz = this->m_itemMap.size();
     DataFile::itoc(buf, fsz);
 
@@ -197,16 +218,23 @@ void DataFile::Write() {
     for (auto it = this->m_itemMap.begin(); it != this->m_itemMap.end(); ++it) {
         std::cout << "Writing key " << it->first << " with value " << it->second << "\n";
 
-        unsigned int w = static_cast<int>(it->first.size()+1);
+        // compute the length of our c_str and make a static cast
+        // so pass-by-ref works with DataFile::itoc
+        unsigned int len = static_cast<unsigned int>(it->first.size()+1);
 
-        std::cout << "Writing int " << w << " to file\n";
-        DataFile::itoc(buf, w);
+        std::cout << "Writing int " << len << " to file\n";
+        DataFile::itoc(buf, len);
         buf[0] = buf[3];
+        // write the length of the following string
         this->m_oStream.write(buf, 1);
 
+        // write the string
         this->m_oStream.write(it->first.c_str(), it->first.size()+1);
 
-        DataFile::itoc(buf, it->second);
+        // reuse len 
+        len = static_cast<unsigned int>(it->second);
+        // convert the amount to chars and write them
+        DataFile::itoc(buf, len);
         this->m_oStream.write(buf, 4);
     }
 
