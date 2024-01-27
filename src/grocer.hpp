@@ -26,23 +26,21 @@ namespace grocer {
         unsigned int GetItem(std::string&);
         void AddItem(std::string&);
         DataFile();
+        ~DataFile();
     };
+
 
     class App {
+        void DisplayHeader();
         DataFile m_dataFile;
         void ClearScreen();
+        template <class T, typename F>
+        void HandleInput(const char*, T&, F&& = [](T&){ return true; });
     public:
+        void ShowQuantities(bool);
+        void FileInput();
         void Run();
         App();
-    };
-
-    class Menu {
-        void DisplayHeader();
-    public:
-        int GetInput(int&);
-        void Quit();
-        void ShowQuantities(bool);
-        void Run();
     };
 }
 

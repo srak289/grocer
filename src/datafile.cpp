@@ -19,125 +19,17 @@ using namespace grocer;
  *
  * Default constructor for m_itemMap is called implicitly
  * with types defined in the header
+ *
+ * Call Read when DataFile is initialized
  */
 DataFile::DataFile() {
     this->Read();
-    std::string s = "squash";
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    s = "butternut squash";
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    s = "sweet corn";
-    this->AddItem(s);
-    this->AddItem(s);
-    s = "cilantro";
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    s = "green bell pepper";
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    s = "engligsh cucumber";
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    s = "yam";
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    this->AddItem(s);
-    s = "tomato";
-    this->AddItem(s);
-    this->AddItem(s);
+}
+
+/**
+ * Call Write before DataFile is deallocated
+ */
+DataFile::~DataFile() {
     this->Write();
 }
 
@@ -252,6 +144,9 @@ bool DataFile::FindItem(std::string& t_itemName) {
     return false;
 }
 
+/**
+ * Add item to the map or increment the quantity
+ */
 void DataFile::AddItem(std::string& t_itemName) {
     if (this->FindItem(t_itemName)) {
         this->m_itemMap[t_itemName]++;
@@ -260,6 +155,9 @@ void DataFile::AddItem(std::string& t_itemName) {
     this->m_itemMap[t_itemName] = 1;
 }
 
+/**
+ * Get item quantity from the map
+ */
 unsigned int DataFile::GetItem(std::string& t_itemName) {
     if (this->FindItem(t_itemName)) {
         return this->m_itemMap[t_itemName];
