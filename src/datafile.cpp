@@ -58,7 +58,7 @@ void DataFile::Read() {
     this->m_iStream.read(buf, 4);
     DataFile::ctoi(buf, fsz);
 
-    std::cout << "Reading " << fsz << " from file\n";
+    // std::cout << "Reading " << fsz << " from file\n";
 
     for (int i=0; i<fsz; i++) {
         // zero the important part of the buffer each
@@ -80,7 +80,7 @@ void DataFile::Read() {
         unsigned int len = 0;
         DataFile::ctoi(buf, len);
 
-        std::cout << "Reading " << len << " from file.\n";
+        // std::cout << "Reading " << len << " from file.\n";
         this->m_iStream.read(buf, len);
 
         // make a new string from buf up to \0
@@ -90,7 +90,7 @@ void DataFile::Read() {
         this->m_iStream.read(buf, 4);
         DataFile::ctoi(buf, len);
 
-        std::cout << "Adding " << s << " with quantity " << len << " to map\n";
+        // std::cout << "Adding " << s << " with quantity " << len << " to map\n";
         // add the reconstructed key to the map
         this->m_itemMap[s] = len;
     }
@@ -108,13 +108,13 @@ void DataFile::Write() {
     this->m_oStream.write(buf, 4);
 
     for (auto it = this->m_itemMap.begin(); it != this->m_itemMap.end(); ++it) {
-        std::cout << "Writing key " << it->first << " with value " << it->second << "\n";
+        // std::cout << "Writing key " << it->first << " with value " << it->second << "\n";
 
         // compute the length of our c_str and make a static cast
         // so pass-by-ref works with DataFile::itoc
         unsigned int len = static_cast<unsigned int>(it->first.size()+1);
 
-        std::cout << "Writing int " << len << " to file\n";
+        // std::cout << "Writing int " << len << " to file\n";
         DataFile::itoc(buf, len);
         buf[0] = buf[3];
         // write the length of the following string
@@ -163,4 +163,17 @@ unsigned int DataFile::GetItem(std::string& t_itemName) {
         return this->m_itemMap[t_itemName];
     }
     return -1;
+}
+
+/**
+ * Return an iterator to our map for the app to process
+ * into report output
+ */
+std::pair<
+    std::map<std::string, unsigned int>::iterator,
+    std::map<std::string, unsigned int>::iterator
+> DataFile::GetReport() {
+    return std::make_pair(
+        this->m_itemMap.begin(), this->m_itemMap.end()
+    );
 }

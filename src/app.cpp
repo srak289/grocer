@@ -5,6 +5,7 @@
 // Assignment 7-3
 // 20240124
 
+#include <iomanip>
 #include <iostream>
 #include <stdexcept>
 #include "grocer.hpp"
@@ -47,32 +48,25 @@ void App::DisplayHeader() {
         << "    4. Quit\n";
 }
 
-/**
- * Handle inputs of type T by looping until the user enters valid input
- *    
- * @param   prompt  The prompt to display
- * @param   result  The reference to read the value into
- */
-template <class T, typename F>
-void App::HandleInput(const char* t_prompt, T& t_result, F&& t_funcTest) {
+void App::ReadInteger(const char* t_prompt, int& t_result) {
     std::cin.exceptions(std::ios::failbit);
     while (true) {
         try {
             std::cout << t_prompt;
             std::cin >> t_result;
-            if (t_funcTest(t_result)) {
-                break;
-            }
-            throw std::invalid_argument("Invalid Argument");
+            break;
         } catch (const std::ios::failure& e) {
             std::cin.clear();
             std::cin.ignore(256, '\n');
             std::cout << "Your input could not be parsed.\n";
-        } catch (const std::invalid_argument& e) {
-            std::cin.ignore(256, '\n');
-            std::cout << "Your input failed the conditional test.\n";
         }
     }
+}
+
+void App::ReadString(const char* t_prompt, std::string& t_result) {
+    std::cout << t_prompt;
+    std::cin.ignore();
+    std::getline(std::cin, t_result);
 }
 
 /**
@@ -85,24 +79,77 @@ void App::FileInput() {
  * The main entrypoint for App
  */
 void App::Run() {
-    this->ClearScreen();
-    this->DisplayHeader();
-    int x = 0;
-    while (x != 4) {
-        this->HandleInput<int&>("Enter an integer [1-4]: ", x, [](int& x){ return x > 0 && x < 5; });
-        switch (x) {
+
+    int t_intInput = 0;
+    unsigned int t_amt = 0;
+    std::string t_strInput = "";
+    std::pair<
+        std::map<std::string, unsigned int>::iterator,
+        std::map<std::string, unsigned int>::iterator
+    > t_itemReport;
+
+    while (t_intInput != 4) {
+
+        this->ClearScreen();
+        this->DisplayHeader();
+
+        this->ReadInteger("Enter an integer [1-4]: ", t_intInput);
+
+        switch (t_intInput) {
             case 1:
-                std::cout << "You pressed 1\n";
+                this->ReadString("Enter an item to search for: ", t_strInput);
+                this->m_dataFile.AddItem(t_strInput);
+                t_amt = this->m_dataFile.GetItem(t_strInput);
+
+                // here we use inline ternary statements to make the language correct
+                // for plural results
+                std::cout << "There " << ((t_amt > 1) ? "have " : "has ") << "been "
+                    << t_amt << ((t_amt > 1) ? " purachases " : " purchase ") << "of \""
+                    << t_strInput << "\"\n";
+
                 break;
+
             case 2:
-                std::cout << "You pressed 2\n";
+                t_itemReport = this->m_dataFile.GetReport();
+                // loop while our begin iterator is not equal to the end iterator
+                for (; t_itemReport.first != t_itemReport.second; ++t_itemReport.first) {
+                    // output the pointed to values of the map iterator
+                    // right align the set width, we assume items have
+                    // a name < 24c in length
+                    std::cout << std::setw(24) << std:: right << t_itemReport.first->first
+                        << ": " << t_itemReport.first->second << std::endl;
+                }
+                std::cout << std::endl;
                 break;
+
             case 3:
-                std::cout << "You pressed 3\n";
+                t_itemReport = this->m_dataFile.GetReport();
+                // loop while our begin iterator is not equal to the end iterator
+                for (; t_itemReport.first != t_itemReport.second; ++t_itemReport.first) {
+                    // construct a string of stars for the histogram
+                    std::string stars(t_itemReport.first->second, '*');
+
+                    // output the pointed to values of the map iterator
+                    // right align the set width, we assume items have
+                    // a name < 24c in length
+                    std::cout << std::setw(24) << std::right << t_itemReport.first->first
+                        << " " << stars << std::endl;
+                }
+                std::cout << std::endl;
                 break;
+
             case 4:
                 std::cout << "Program exit.\n";
                 break;
+
+            default:
+                std::cout << t_intInput << " is not [1-4]\n";
+        }
+        if (t_intInput != 4) {
+            //std::cin.ignore(256, '\n');
+            std::cout << "Press ENTER to continue...";
+            std::cin.ignore(); // FIXME double enter after item search
+            std::getline(std::cin, t_strInput);
         }
     }
 }

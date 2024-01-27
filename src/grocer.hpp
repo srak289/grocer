@@ -21,10 +21,14 @@ namespace grocer {
         static void ctoi(char*, unsigned int&);
         void Write();
         void Read();
-        bool FindItem(std::string&);
     public:
         unsigned int GetItem(std::string&);
         void AddItem(std::string&);
+        bool FindItem(std::string&);
+        std::pair<
+            std::map<std::string, unsigned int>::iterator,
+            std::map<std::string, unsigned int>::iterator
+        > GetReport();
         DataFile();
         ~DataFile();
     };
@@ -34,8 +38,8 @@ namespace grocer {
         void DisplayHeader();
         DataFile m_dataFile;
         void ClearScreen();
-        template <class T, typename F>
-        void HandleInput(const char*, T&, F&& = [](T&){ return true; });
+        void ReadInteger(const char*, int&);
+        void ReadString(const char*, std::string&);
     public:
         void ShowQuantities(bool);
         void FileInput();
