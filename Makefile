@@ -10,7 +10,7 @@ main: build $(OBJS)
 test: grocer.txt
 
 grocer.txt:
-	python3 tests/gentest.py -l 1024
+	python3 tests/gentest.py -l 512
 
 debug: clean
 	CXXFLAGS=-g $(MAKE)

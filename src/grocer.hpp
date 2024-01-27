@@ -35,14 +35,15 @@ namespace grocer {
 
 
     class App {
-        void DisplayHeader();
+        static void DisplayHeader();
         DataFile m_dataFile;
-        void ClearScreen();
-        void ReadInteger(const char*, int&);
-        void ReadString(const char*, std::string&);
+        static void ClearScreen();
+        static void ReadInteger(const char*, int&);
+        static void ReadString(const char*, std::string&);
+        static void LowerString(std::string&);
     public:
         void ShowQuantities(bool);
-        void FileInput();
+        void FileInput(const char*);
         void Run();
         App();
     };

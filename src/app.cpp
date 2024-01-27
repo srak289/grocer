@@ -5,6 +5,7 @@
 // Assignment 7-3
 // 20240124
 
+#include <algorithm>
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>
@@ -48,6 +49,13 @@ void App::DisplayHeader() {
         << "    4. Quit\n";
 }
 
+/**
+ * Read an integer into the passed reference
+ * Trap the user in an input validation loop
+ *
+ * @param   t_prompt    The prompt to show the user
+ * @param   t_result    The reference to assign
+ */
 void App::ReadInteger(const char* t_prompt, int& t_result) {
     std::cin.exceptions(std::ios::failbit);
     while (true) {
@@ -63,16 +71,50 @@ void App::ReadInteger(const char* t_prompt, int& t_result) {
     }
 }
 
+/**
+ * Read a string into the passed reference
+ *
+ * @param   t_prompt    The prompt to show the user
+ * @param   t_result    The reference to assign
+ */
 void App::ReadString(const char* t_prompt, std::string& t_result) {
     std::cout << t_prompt;
+    // We must call cin.ignore before a getline call
     std::cin.ignore();
     std::getline(std::cin, t_result);
 }
 
 /**
- * Read the data from stdin into the DataFile map
+ * Convert a string to lowercase for database consistency
  */
-void App::FileInput() {
+void App::LowerString(std::string& t_string) {
+    std::transform(
+        t_string.begin(),
+        t_string.end(),
+        t_string.begin(),
+        [](unsigned char c){ return std::tolower(c); }
+    );
+}
+
+/**
+ * Read the data from stdin into the DataFile map
+ *
+ * @param   t_file  the file to read
+ *
+ * @throws  std::runtime_error
+ */
+void App::FileInput(const char* t_file) {
+    std::ifstream iStream(t_file);
+    if (!iStream.good()) {
+        throw std::runtime_error("File could not be read.");
+    }
+    std::string buf;
+    while (getline(iStream, buf)) {
+        // lower the string for consistency
+        App::LowerString(buf);
+        //std::cout << "Adding \"" << buf << "\" to datafile\n";
+        this->m_dataFile.AddItem(buf);
+    }
 }
 
 /**
@@ -98,6 +140,8 @@ void App::Run() {
         switch (t_intInput) {
             case 1:
                 this->ReadString("Enter an item to search for: ", t_strInput);
+                // always add our item to the list because we are purchasing
+                // this will either increment the existing key or create a new key
                 this->m_dataFile.AddItem(t_strInput);
                 t_amt = this->m_dataFile.GetItem(t_strInput);
 
@@ -146,10 +190,12 @@ void App::Run() {
                 std::cout << t_intInput << " is not [1-4]\n";
         }
         if (t_intInput != 4) {
-            //std::cin.ignore(256, '\n');
+            if (t_intInput != 1) {
+                // only ignore if the last call to cin was not `getline`
+                std::cin.ignore();
+            }
             std::cout << "Press ENTER to continue...";
-            std::cin.ignore(); // FIXME double enter after item search
-            std::getline(std::cin, t_strInput);
+            std::cin.get();
         }
     }
 }
