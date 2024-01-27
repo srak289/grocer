@@ -33,6 +33,12 @@ DataFile::~DataFile() {
     this->Write();
 }
 
+/**
+ * Convert a 4-byte int to the first four chars of the buffer
+ *
+ * @param   buf the buffer to write to
+ * @param   i   the integer to write
+ */
 void DataFile::itoc(char* buf, unsigned int& i) {
     buf[0] = (i & 0xff000000) >> 24;
     buf[1] = (i & 0x00ff0000) >> 16;
@@ -40,6 +46,12 @@ void DataFile::itoc(char* buf, unsigned int& i) {
     buf[3] = (i & 0x000000ff);
 }
 
+/**
+ * Convert a buffer to a 4-byte int
+ *
+ * @param   buf the buffer to read from
+ * @param   i   the integer to set
+ */
 void DataFile::ctoi(char* buf, unsigned int& i) {
     i = reinterpret_cast<unsigned char&>(buf[0]) << 24
         | reinterpret_cast<unsigned char&>(buf[1]) << 16
@@ -47,6 +59,9 @@ void DataFile::ctoi(char* buf, unsigned int& i) {
         | reinterpret_cast<unsigned char&>(buf[3]);
 }
 
+/**
+ * Read our data file format into the item map
+ */
 void DataFile::Read() {
     this->m_iStream = std::ifstream("frequency.dat", std::ios::binary);
 
@@ -98,6 +113,9 @@ void DataFile::Read() {
     this->m_iStream.close();
 }
 
+/**
+ * Write our data file format to disk by dumping the item map
+ */
 void DataFile::Write() {
     this->m_oStream = std::ofstream("frequency.dat", std::ios::binary | std::ios::trunc);
 

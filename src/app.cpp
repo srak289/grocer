@@ -36,7 +36,7 @@ void App::ClearScreen() {
 }
 
 /**
- * Dispslay the header
+ * Display the header
  */
 void App::DisplayHeader() {
     std::string stars(34, '*');
@@ -140,6 +140,8 @@ void App::Run() {
         switch (t_intInput) {
             case 1:
                 this->ReadString("Enter an item to search for: ", t_strInput);
+                // lower the string
+                App::LowerString(t_strInput);
                 // always add our item to the list because we are purchasing
                 // this will either increment the existing key or create a new key
                 this->m_dataFile.AddItem(t_strInput);
