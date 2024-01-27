@@ -86,6 +86,8 @@ void App::ReadString(const char* t_prompt, std::string& t_result) {
 
 /**
  * Convert a string to lowercase for database consistency
+ *
+ * https://stackoverflow.com/questions/313970/how-to-convert-an-instance-of-stdstring-to-lower-case
  */
 void App::LowerString(std::string& t_string) {
     std::transform(
@@ -171,6 +173,7 @@ void App::Run() {
             case 3:
                 t_itemReport = this->m_dataFile.GetReport();
                 // loop while our begin iterator is not equal to the end iterator
+                // https://stackoverflow.com/questions/8822576/function-returning-iterator-in-c
                 for (; t_itemReport.first != t_itemReport.second; ++t_itemReport.first) {
                     // construct a string of stars for the histogram
                     std::string stars(t_itemReport.first->second, '*');

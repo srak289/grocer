@@ -51,6 +51,8 @@ void DataFile::itoc(char* buf, unsigned int& i) {
  *
  * @param   buf the buffer to read from
  * @param   i   the integer to set
+ *
+ * https://stackoverflow.com/questions/332030/when-should-static-cast-dynamic-cast-const-cast-and-reinterpret-cast-be-used
  */
 void DataFile::ctoi(char* buf, unsigned int& i) {
     i = reinterpret_cast<unsigned char&>(buf[0]) << 24
@@ -125,6 +127,7 @@ void DataFile::Write() {
 
     this->m_oStream.write(buf, 4);
 
+    // https://en.cppreference.com/w/cpp/container/map/begin
     for (auto it = this->m_itemMap.begin(); it != this->m_itemMap.end(); ++it) {
         // std::cout << "Writing key " << it->first << " with value " << it->second << "\n";
 
@@ -186,6 +189,8 @@ unsigned int DataFile::GetItem(std::string& t_itemName) {
 /**
  * Return an iterator to our map for the app to process
  * into report output
+ *
+ * https://stackoverflow.com/questions/8822576/function-returning-iterator-in-c
  */
 std::pair<
     std::map<std::string, unsigned int>::iterator,
