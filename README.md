@@ -10,7 +10,7 @@ To build:
 To make the testfile:
 
 ```bash
-    make tests
+    make test
 ```
 
 To load the database:
